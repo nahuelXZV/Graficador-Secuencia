@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MainController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,7 +23,10 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [MainController::class, 'dashboard'])->name('dashboard');
+    Route::get('/diagrama/crear', [MainController::class, 'crear_digrama'])->name('new_diagrama');
+    Route::post('/diagrama/guardar', [MainController::class, 'guardar_diagrama'])->name('guardar_diagrama');
+    Route::get('/diagrama/{id}', [MainController::class, 'diagrama'])->name('show_diagrama');
+    Route::delete('/diagrama/{id}', [MainController::class, 'eliminar_digrama'])->name('eliminar_diagrama');
+    Route::put('/diagrama/{id}', [MainController::class, 'actualizar_diagrama'])->name('actualizar_diagrama');
 });
