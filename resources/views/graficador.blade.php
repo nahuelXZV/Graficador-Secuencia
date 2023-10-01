@@ -3,17 +3,31 @@
 
         <div class="w-full h-16 mb-2">
             {{-- botones --}}
-            <div class="col-span-2 w-full h-full bg-white ">
-                <div class="flex flex-row items-center justify-end w-full h-full space-x-2">
-                    <a href="" class="  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+            <div class="col-span-2 w-full h-full bg-white flex justify-between ">
+                <div class="flex flex-row items-center justify-start w-full h-full space-x-2">
+                    <a href=""
+                        class="text-sm  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg ml-1">
                         Codigo Java
                     </a>
-                    <a href="" class="  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                    <a href=""
+                        class="text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
                         Codigo Python
                     </a>
-                    <a href="" class="  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                    <a href=""
+                        class="text-sm  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
                         Codigo Javascript
                     </a>
+                </div>
+                <div class="flex flex-row items-center justify-end w-full h-full mr-2 ">
+                    <button type="button" onclick="copyToClipboard()"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 ">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+                        </svg>
+                        <span class="sr-only">Compartir</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -36,11 +50,8 @@
                     </button>
                 </div>
                 <div class="flex flex-col items-center justify-center w-full h-full px-2 pb-14">
-                    <textarea name="" id="editor" class="w-full h-full " cols="30" rows="18">
-                        {{ $diagrama->markdown }}
-                    </textarea>
-                    <button
-                        class="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                    <textarea name="" id="editor" class="w-full h-full " cols="30" rows="18">{{ $diagrama->markdown }}</textarea>
+                    <button class="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
                         onclick="exportar()">
                         Exportar
                     </button>
@@ -107,6 +118,26 @@
         </div>
 
     </div>
+    <script>
+        function copyToClipboard() {
+            // sacar el valor de $compartir_url
+            let textoACopiar = @json($compartir_url);
+            console.log(textoACopiar);
+            // Crea un elemento de texto oculto
+            var elementoTemporario = document.createElement("textarea");
+            elementoTemporario.value = textoACopiar;
+            document.body.appendChild(elementoTemporario);
+
+            // Selecciona y copia el texto
+            elementoTemporario.select();
+            document.execCommand("copy");
+
+            // Elimina el elemento temporal
+            document.body.removeChild(elementoTemporario);
+            alert("Copiado al portapapeles");
+        }
+    </script>
+
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
         let grafico = document.querySelector("#grafico");
@@ -135,31 +166,30 @@
             grafico.innerHTML = svg;
         }
 
-
-        setInterval(function() {
-            let id = {{ $diagrama->id }};
-            let markdown = editor.value;
-            let _token = "{{ csrf_token() }}";
-            let url = "{{ route('actualizar_diagrama', ['id' => $diagrama->id]) }}";
-            let data = {
-                id,
-                markdown,
-                _token
-            };
-            fetch(url, {
-                    method: 'PUT',
-                    body: JSON.stringify(data),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': _token
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                })
-                .catch(error => console.log(error));
-        }, 20000);
+        // setInterval(function() {
+        //     let id = {{ $diagrama->id }};
+        //     let markdown = editor.value;
+        //     let _token = "{{ csrf_token() }}";
+        //     let url = "{{ route('actualizar_diagrama', ['id' => $diagrama->id]) }}";
+        //     let data = {
+        //         id,
+        //         markdown,
+        //         _token
+        //     };
+        //     fetch(url, {
+        //             method: 'PUT',
+        //             body: JSON.stringify(data),
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 'Accept': 'application/json',
+        //                 'X-CSRF-TOKEN': _token
+        //             }
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             console.log(data);
+        //         })
+        //         .catch(error => console.log(error));
+        // }, 20000);
     </script>
 </x-app-layout>

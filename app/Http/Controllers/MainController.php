@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Diagrama;
+use App\Models\Participantes;
 use Illuminate\Http\Request;
 
 class MainController extends Controller
@@ -30,7 +31,18 @@ class MainController extends Controller
     public function diagrama($id)
     {
         $diagrama = Diagrama::obtenerPorIdentificador($id);
-        return view('graficador', compact('diagrama'));
+        $compartir_url = url('/diagrama/' . $diagrama->identificador);
+        if (auth()->user()->id === $diagrama->usuario_id) {
+            return view('graficador', compact('diagrama', 'compartir_url'));
+        }
+        $participantes = Participantes::participaDiagrama(auth()->user()->id, $diagrama->id);
+        if (!$participantes) {
+            Participantes::crear([
+                'usuario_id' => auth()->user()->id,
+                'diagrama_id' => $diagrama->id,
+            ]);
+        }
+        return view('graficador', compact('diagrama', 'compartir_url'));
     }
 
     public function eliminar_diagrama($id)

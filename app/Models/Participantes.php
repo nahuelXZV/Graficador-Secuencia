@@ -36,6 +36,12 @@ class Participantes extends Model
         return $participante;
     }
 
+    static function participaDiagrama($usuario_id, $diagrama_id)
+    {
+        $participante = Participantes::where('usuario_id', $usuario_id)->where('diagrama_id', $diagrama_id)->first();
+        return $participante;
+    }
+
     static function eliminar($id)
     {
         $participante = Participantes::find($id);
