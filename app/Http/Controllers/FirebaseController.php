@@ -16,7 +16,7 @@ class FirebaseController extends Controller
     public function __construct()
     {
         $this->firebase = (new Factory)
-            ->withServiceAccount(__DIR__ . '\FirebaseKey.json')
+            ->withServiceAccount(__DIR__ . '\..\..\..\public\FirebaseKey.json')
             ->withDatabaseUri('https://graficador-295cc-default-rtdb.firebaseio.com/');
 
         $this->database = $this->firebase->createDatabase(); // Método actualizado para crear una instancia de Database
