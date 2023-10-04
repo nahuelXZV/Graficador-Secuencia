@@ -31,8 +31,9 @@ class Diagrama extends Model
         $nombre = $array['nombre'];
         $markdown = $array['markdown'];
         $usuario_id = $array['usuario_id'];
+        $identificador = $array['identificador'];
         $diagrama = new Diagrama();
-        $diagrama->identificador = uniqid();
+        $diagrama->identificador = $identificador;
         $diagrama->nombre = $nombre;
         $diagrama->markdown = $markdown;
         $diagrama->usuario_id = $usuario_id;
@@ -73,7 +74,9 @@ class Diagrama extends Model
 
     static function obtenerPorUsuario($usuario_id)
     {
-        $diagramas = Diagrama::where('usuario_id', $usuario_id)->get();
+        $diagramas = Diagrama::where('usuario_id', $usuario_id)
+            ->orderBy('updated_at', 'desc')
+            ->get();
         return $diagramas;
     }
 

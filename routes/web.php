@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+// redirect to login
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('dashboard');
 });
 
 Route::middleware([
@@ -27,6 +27,6 @@ Route::middleware([
     Route::get('/diagrama/crear', [MainController::class, 'crear_digrama'])->name('new_diagrama');
     Route::post('/diagrama/guardar', [MainController::class, 'guardar_diagrama'])->name('guardar_diagrama');
     Route::get('/diagrama/{id}', [MainController::class, 'diagrama'])->name('show_diagrama');
-    Route::delete('/diagrama/{id}', [MainController::class, 'eliminar_digrama'])->name('eliminar_diagrama');
+    Route::delete('/diagrama/{id}', [MainController::class, 'eliminar_diagrama'])->name('eliminar_diagrama');
     Route::put('/diagrama/{id}', [MainController::class, 'actualizar_diagrama'])->name('actualizar_diagrama');
 });
