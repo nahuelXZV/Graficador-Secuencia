@@ -139,9 +139,21 @@
     </script>
 
     <script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-        let grafico = document.querySelector("#grafico");
         let editor = document.getElementById("editor");
+        let grafico = document.querySelector("#grafico");
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import {
+            getDatabase,
+            ref,
+            set,
+            get,
+            onValue
+        } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+        // Mermaid
         mermaid.initialize({
             startOnLoad: false,
             theme: 'neutral',
@@ -151,45 +163,91 @@
                 htmlLabels: true
             }
         });
-        editor.onkeyup = async function() {
+
+        let drawDiagram = async function(markdown) {
             const {
                 svg
-            } = await mermaid.render('theGraph', editor.value);
+            } = await mermaid.render('theGraph', markdown);
             grafico.innerHTML = svg;
         }
 
         // cuando se carga la pagina se renderiza el grafico
         window.onload = async function() {
-            const {
-                svg
-            } = await mermaid.render('theGraph', editor.value);
-            grafico.innerHTML = svg;
+            // traer el markdown de firebase
+            const nodoRef = ref(database, 'graficas/' + identificador);
+            const snapshot = await get(nodoRef);
+            let markdown = snapshot.val().markdown;
+            editor.value = markdown;
+            await drawDiagram(markdown);
         }
 
-        // setInterval(function() {
-        //     let id = {{ $diagrama->id }};
-        //     let markdown = editor.value;
-        //     let _token = "{{ csrf_token() }}";
-        //     let url = "{{ route('actualizar_diagrama', ['id' => $diagrama->id]) }}";
-        //     let data = {
-        //         id,
-        //         markdown,
-        //         _token
-        //     };
-        //     fetch(url, {
-        //             method: 'PUT',
-        //             body: JSON.stringify(data),
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //                 'Accept': 'application/json',
-        //                 'X-CSRF-TOKEN': _token
-        //             }
-        //         })
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             console.log(data);
-        //         })
-        //         .catch(error => console.log(error));
-        // }, 20000);
+        // Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRQdphfO-udl8UAIWJb7ZtTfDvZiKIHLI",
+            authDomain: "graficador-295cc.firebaseapp.com",
+            databaseURL: "https://graficador-295cc-default-rtdb.firebaseio.com",
+            projectId: "graficador-295cc",
+            storageBucket: "graficador-295cc.appspot.com",
+            messagingSenderId: "920173213639",
+            appId: "1:920173213639:web:8c183fda05d9acb36c4be2"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        const database = getDatabase(app);
+        let identificador = @json($diagrama->identificador);
+
+        //actualizar el valor del markdown en la base de datos con la key identificador
+        editor.onkeyup = async function() {
+            let markdown = editor.value;
+            const nodoRef = ref(database, 'graficas/' + identificador);
+            set(nodoRef, {
+                    markdown: markdown
+                })
+                .then(async () => {
+                    await drawDiagram(markdown);
+                    console.log("Datos guardados exitosamente en Firebase.");
+                })
+                .catch((error) => {
+                    console.error("Error al guardar datos en Firebase:", error);
+                });
+        }
+
+        // recibir el diagrama en tiempo real
+        const nodoRef = ref(database, 'graficas/' + identificador);
+        onValue(nodoRef, async (snapshot) => {
+            let markdown = snapshot.val().markdown;
+            editor.value = markdown;
+            await drawDiagram(markdown);
+        });
+
+
+
+        setInterval(function() {
+            let id = {{ $diagrama->id }};
+            let markdown = editor.value;
+            let _token = "{{ csrf_token() }}";
+            let url = "{{ route('actualizar_diagrama', ['id' => $diagrama->id]) }}";
+            let data = {
+                id,
+                markdown,
+                _token
+            };
+            fetch(url, {
+                    method: 'PUT',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': _token
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => console.log(error));
+        }, 10000);
     </script>
 </x-app-layout>

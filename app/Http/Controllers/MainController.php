@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class MainController extends Controller
 {
+    public $firebase;
+
+    public function __construct()
+    {
+        $this->firebase = new FirebaseController();
+    }
 
     public function dashboard()
     {
@@ -22,9 +28,14 @@ class MainController extends Controller
     public function guardar_diagrama(Request $request)
     {
         $nombre = $request->input('nombre');
-        $markdown = 'sequenceDiagram\n';
+        $markdown = 'sequenceDiagram' .
+            '    Alice->>John: Hello John, how are you?' .
+            '    John-->>Alice: Great!';
         $usuario_id = auth()->user()->id;
-        $diagrama = Diagrama::crear(compact('nombre', 'markdown', 'usuario_id'));
+        $identificador = $this->firebase->addData([
+            'markdown' => $markdown,
+        ]);
+        $diagrama = Diagrama::crear(compact('nombre', 'markdown', 'usuario_id', 'identificador'));
         return redirect()->route('show_diagrama', $diagrama->identificador);
     }
 
@@ -47,6 +58,8 @@ class MainController extends Controller
 
     public function eliminar_diagrama($id)
     {
+        $diagrama = Diagrama::eliminar($id);
+        return redirect()->route('dashboard');
     }
 
     public function actualizar_diagrama(Request $request, $id)
