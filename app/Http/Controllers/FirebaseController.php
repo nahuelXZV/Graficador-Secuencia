@@ -15,7 +15,7 @@ class FirebaseController extends Controller
 
     public function __construct()
     {
-        $dir = env('APP_ENV') !== 'production' ? __DIR__ . '/FirebaseKey.json' : '/app/app/public/FirebaseKey.json';
+        $dir = env('APP_ENV') !== 'production' ? __DIR__ . '/FirebaseKey.json' : '/app/FirebaseKey.json';
         $this->firebase = (new Factory)
             ->withServiceAccount($dir)
             ->withDatabaseUri('https://graficador-295cc-default-rtdb.firebaseio.com/');
