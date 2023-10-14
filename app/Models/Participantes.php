@@ -42,6 +42,14 @@ class Participantes extends Model
         return $participante;
     }
 
+    static function obtenerPorUsuario($usuario_id)
+    {
+        $participantes = Participantes::join('diagramas', 'diagramas.id', '=', 'participantes.diagrama_id')
+            ->select('diagramas.*')
+            ->where('participantes.usuario_id', $usuario_id)->get();
+        return $participantes;
+    }
+
     static function eliminar($id)
     {
         $participante = Participantes::find($id);

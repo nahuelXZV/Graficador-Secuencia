@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Kreait\Firebase\Factory;
-use Kreait\Firebase\Database;
 use Kreait\Firebase\Exception\FirebaseException;
 
 class FirebaseController extends Controller
@@ -15,8 +13,9 @@ class FirebaseController extends Controller
 
     public function __construct()
     {
+        $dir = env('APP_ENV') !== 'production' ? __DIR__ . '/FirebaseKey.json' : '/app/FirebaseKey.json';
         $this->firebase = (new Factory)
-            ->withServiceAccount(__DIR__ . '\FirebaseKey.json')
+            ->withServiceAccount($dir)
             ->withDatabaseUri('https://graficador-295cc-default-rtdb.firebaseio.com/');
 
         $this->database = $this->firebase->createDatabase(); // Método actualizado para crear una instancia de Database
@@ -33,9 +32,6 @@ class FirebaseController extends Controller
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
-
-
-
 
     public function editData($data, $id)
     {

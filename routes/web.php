@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\CsharpController;
+use App\Http\Controllers\JavaController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\PhpController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,4 +32,8 @@ Route::middleware([
     Route::get('/diagrama/{id}', [MainController::class, 'diagrama'])->name('show_diagrama');
     Route::delete('/diagrama/{id}', [MainController::class, 'eliminar_diagrama'])->name('eliminar_diagrama');
     Route::put('/diagrama/{id}', [MainController::class, 'actualizar_diagrama'])->name('actualizar_diagrama');
+
+    Route::get('/generar/java/{id}', [JavaController::class, 'generar'])->name('generar_java');
+    Route::get('/generar/csharp/{id}', [CsharpController::class, 'generar'])->name('generar_csharp');
+    Route::get('/generar/php/{id}', [PhpController::class, 'generar'])->name('generar_php');
 });
