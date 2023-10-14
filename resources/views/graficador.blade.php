@@ -5,7 +5,7 @@
             {{-- botones --}}
             <div class="col-span-2 w-full h-full bg-white flex justify-between ">
                 <div class="flex flex-row items-center justify-start w-full h-full space-x-2">
-                    <a href=""
+                    <a href="{{ route('generar_java',$diagrama->id) }}" target="_blank"
                         class="text-sm  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg ml-1">
                         Codigo Java
                     </a>

@@ -18,6 +18,7 @@ class MainController extends Controller
     public function dashboard()
     {
         $diagramas = Diagrama::obtenerPorUsuario(auth()->user()->id);
+        // $diagramasCompartidos = Participantes::obtenerPorUsuario(auth()->user()->id);
         return view('dashboard', compact('diagramas'));
     }
 
