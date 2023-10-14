@@ -33,5 +33,9 @@ return [
     'firebase' => [
         'database_url' => env('FIREBASE_DATABASE_URL'),
         'secret' => env('FIREBASE_DATABASE_SECRET'),
-    ]
+    ],
+    'openai' => [
+        'key' => env('OPENAI_API_KEY'),
+    ],
+
 ];

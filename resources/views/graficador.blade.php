@@ -5,17 +5,17 @@
             {{-- botones --}}
             <div class="col-span-2 w-full h-full bg-white flex justify-between ">
                 <div class="flex flex-row items-center justify-start w-full h-full space-x-2">
-                    <a href="{{ route('generar_java',$diagrama->id) }}" target="_blank"
+                    <a href="{{ route('generar_java', $diagrama->id) }}" target="_blank"
                         class="text-sm  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg ml-1">
                         Codigo Java
                     </a>
-                    <a href=""
+                    <a href="{{ route('generar_php', $diagrama->id) }}" target="_blank"
                         class="text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
-                        Codigo Python
+                        Codigo php
                     </a>
-                    <a href=""
+                    <a href="{{ route('generar_csharp', $diagrama->id) }}" target="_blank"
                         class="text-sm  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
-                        Codigo Javascript
+                        Codigo C#
                     </a>
                 </div>
                 <div class="flex flex-row items-center justify-end w-full h-full mr-2 ">
@@ -175,9 +175,11 @@
         window.onload = async function() {
             // traer el markdown de firebase
             const nodoRef = ref(database, 'graficas/' + identificador);
-            const snapshot = await get(nodoRef);
-            let markdown = snapshot.val().markdown;
-            editor.value = markdown;
+            setInterval(async function() {
+                const snapshot = await get(nodoRef);
+                let markdown = snapshot.val().markdown;
+                editor.value = markdown;
+            }, 5000);
             await drawDiagram(markdown);
         }
 
